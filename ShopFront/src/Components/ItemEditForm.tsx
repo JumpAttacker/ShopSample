@@ -1,5 +1,5 @@
 // Helper styles for demo
-import style from "./ItemEditForm.module.scss";
+import style from "../Styles/ItemEditForm.module.scss";
 
 import React, {useEffect, useState} from "react";
 import {ErrorMessage, Field, Formik} from "formik";

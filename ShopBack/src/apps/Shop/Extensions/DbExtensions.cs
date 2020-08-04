@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Domain.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,28 +21,7 @@ namespace Shop.Extensions
 
         public static void InitializeDatabase(this IApplicationBuilder app)
         {
-            // try
-            // {
-            //     var client = new HttpClient();
-            //     var result = await client.GetStringAsync("http://identity_server4/.well-known/openid-configuration");
-            //     Console.WriteLine("OPEN ID: " + result);
-            // }
-            // catch (Exception e)
-            // {
-            //     Console.WriteLine(e);
-            // }
-            //
-            // try
-            // {
-            //     var client = new HttpClient();
-            //     var result = await client.GetStringAsync("http://identity_server/.well-known/openid-configuration");
-            //     Console.WriteLine("OPEN ID: " + result);
-            // }
-            // catch (Exception e)
-            // {
-            //     Console.WriteLine(e);
-            // }
-            Console.WriteLine("Starting migration");
+            Console.WriteLine("Start migration");
             try
             {
                 using var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
@@ -49,7 +31,36 @@ namespace Shop.Extensions
             {
                 Console.WriteLine(e);
             }
-            Console.WriteLine("Starting migration");
+            Console.WriteLine("End migration");
+
+
+            try
+            {
+                using var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+                var any = context.Items.Any();
+                if (!any)
+                {
+                    Console.WriteLine("start seeding");
+                    var data = new List<Item>();
+                    for (int i = 0; i < 100; i++)
+                    {
+                        data.Add(new Item()
+                        {
+                            Name = $"Item #{i}",
+                            Description = "some description for item #"+i,
+                            Price = new Random(100).Next(10,500)
+                        });
+                    }
+                    context.Items.AddRange(data);
+                    context.SaveChanges();
+                    Console.WriteLine("end of seed");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

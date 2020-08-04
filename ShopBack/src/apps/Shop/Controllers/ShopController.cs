@@ -45,7 +45,7 @@ namespace Shop.Controllers
         [HttpGet("{Page:int}/{PerPage:int}")]
         public async Task<IActionResult> GetWithPagination([FromRoute] PaginationModel paginationSettings)
         {
-            _logger.LogDebug($"Method {nameof(Get)} ");
+            _logger.LogDebug($"Method {nameof(GetWithPagination)} Page: {paginationSettings.Page} PageSize: {paginationSettings.PerPage}");
             var data = await _shopService.GetItems(paginationSettings);
             return Ok(data);
         }

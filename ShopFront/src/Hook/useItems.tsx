@@ -1,5 +1,6 @@
 import useRequest from "./useRequest";
 import {IItem} from "../store/Items/Slice";
+import {IPagination} from "../Page/ItemsPage";
 
 const endpointUrl = 'http://localhost:5003/Shop'
 
@@ -8,6 +9,10 @@ const useItems = () => {
 
     const GetItems = async () => {
         return await fetchData(endpointUrl);
+    }
+
+    const GetItemsWithPagination = async (pagination: IPagination) => {
+        return await fetchData(endpointUrl+`/${pagination.page}/${pagination.pageSize}`);
     }
 
     const GetItemById = async (id: number) => {
@@ -28,6 +33,7 @@ const useItems = () => {
 
     return {
         GetItems,
+        GetItemsWithPagination,
         GetItemById,
         UpdateItem,
         CreateItem,

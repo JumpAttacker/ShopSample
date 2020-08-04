@@ -27,8 +27,8 @@ const useRequest = () => {
     const checkForResult = async (statusCode: number) => {
         if (statusCode === 401) {
             console.log('Unauthorized')
-            dispatch(clearUser());
-            await Login();
+            // dispatch(clearUser());
+            // await Login();
         } else {
             return true;
         }

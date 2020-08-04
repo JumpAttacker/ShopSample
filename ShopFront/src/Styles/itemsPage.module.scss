@@ -1,0 +1,9 @@
+.myFlex{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: baseline;
+  align-content: stretch;
+  margin: 5px;
+}
