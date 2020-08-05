@@ -1,5 +1,5 @@
 import useAuth from "../Hook/useAuth";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import {Callback} from "react-oidc";
 import {clearUser, saveUser} from "../store/userData/Slice";
@@ -8,10 +8,12 @@ import React from "react";
 import MainNavBar from "./MainNavBar";
 import ItemPage from "../Page/ItemPage";
 import SilentRedirectPage from "./SilentRedirectPage";
+import PrivateRoute from "./PrivateRouter";
 
 const AppRouter = () => {
     const {userManager} = useAuth();
     const dispatch = useDispatch()
+    const {IsAuth} = useAuth();
     return <Router>
         <MainNavBar/>
         <Switch>
@@ -32,9 +34,16 @@ const AppRouter = () => {
                     />
                 )}
             />
+
             <Route path="/callback-silent" component={SilentRedirectPage}/>
-            <Route exact path="/items" component={ItemsPage}/>
-            <Route path="/Items/:id" component={ItemPage}/>
+            <PrivateRoute exact path="/items" authed={IsAuth()}>
+                <ItemsPage/>
+            </PrivateRoute>
+            <PrivateRoute path="/Items/:id" authed={IsAuth()}>
+                <ItemPage/>
+            </PrivateRoute>
+
+
         </Switch>
     </Router>
 }

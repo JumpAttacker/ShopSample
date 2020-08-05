@@ -14,7 +14,10 @@
       "launchBrowser": true,
       "launchUrl": "shop",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DB_CONNECTION_STRING": "Host=localhost;Port=54320;Database=shopService;Username=postgres;Password=mysecretpassword",
+        "AUTH_Authority": "http://localhost:5000/",
+        "AUTH_Audience": "api"
       }
     },
     "Shop": {

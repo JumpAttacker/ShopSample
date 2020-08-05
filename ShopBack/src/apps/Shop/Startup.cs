@@ -25,7 +25,6 @@ namespace Shop
             {
                 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
                                        "Host=localhost;Port=54320;Database=shopService;Username=postgres;Password=mysecretpassword";
-                Console.WriteLine($"connection string: {connectionString}");
                 builder.UseLoggerFactory(DbExtensions.GetLoggerFactory).UseNpgsql(
                     connectionString);
             });
@@ -39,8 +38,6 @@ namespace Shop
                     var authority = Environment.GetEnvironmentVariable("AUTH_Authority");
                     var audience = Environment.GetEnvironmentVariable("AUTH_Audience");
 
-                    Console.WriteLine($"authority: {authority}");
-                    Console.WriteLine($"audience: {audience}");
                     options.Authority = authority;
                     options.Audience = audience;
                     options.RequireHttpsMetadata = false;

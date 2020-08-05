@@ -1,19 +1,7 @@
 import {makeUserManager} from "react-oidc";
 import Oidc from "oidc-client";
-
-const Constants = {
-    stsAuthority: 'http://localhost:5000/',
-    clientId: 'interactive.public',
-    clientRoot: 'http://localhost:3000/',
-    clientScope: 'openid profile email api',
-    apiRoot: 'http://localhost:5000/api/',
-    //
-    // stsAuthority: 'https://demo.identityserver.io/',
-    // clientId: 'interactive.public',
-    // clientRoot: 'http://localhost:4200/',
-    // clientScope: 'openid profile email api',
-    // apiRoot: 'https://demo.identityserver.io/api/'
-}
+import {useSelector} from "react-redux";
+import Constants from "../Constants";
 
 const config = {
     authority: Constants.stsAuthority,
@@ -32,13 +20,18 @@ Oidc.Log.level = Oidc.Log.DEBUG;
 
 const useAuth = () => {
     const userManager = makeUserManager(config)
+    const authed: boolean = useSelector((state: any) => {
+        const userData = state.userData;
+        if (userData)
+            return userData.profile?.name ? true : false;
+        return false
+    });
     const GetUser = async () => {
         const user = await userManager.getUser();
         return user;
     }
-    const IsAuth = async () => {
-        const user = await userManager.getUser();
-        return !!user;
+    const IsAuth = () => {
+        return authed
     }
     const Login = async () => {
         await userManager.signinRedirect()

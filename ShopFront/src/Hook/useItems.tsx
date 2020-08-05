@@ -1,8 +1,9 @@
 import useRequest from "./useRequest";
 import {IItem} from "../store/Items/Slice";
 import {IPagination} from "../Page/ItemsPage";
+import Constants from "../Constants";
 
-const endpointUrl = 'http://localhost:5003/Shop'
+const endpointUrl = Constants.apiEndpoint
 
 const useItems = () => {
     const {fetchData} = useRequest();

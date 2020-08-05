@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Shop.Services
+namespace Shop.Models
 {
     public class Response<T>
     {
