@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
@@ -21,10 +22,11 @@ namespace Shop
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
             services.AddDbContext<ApplicationContext>((provider, builder) =>
             {
                 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
-                                       "Host=localhost;Port=54320;Database=shopService;Username=postgres;Password=mysecretpassword";
+                                       configuration.GetSection("DatabaseConfig")["PostgresSQL"];
                 builder.UseLoggerFactory(DbExtensions.GetLoggerFactory).UseNpgsql(
                     connectionString);
             });
@@ -46,15 +48,6 @@ namespace Shop
                         ValidIssuers = new[] {"http://localhost:5000", "http://identity_server4/"}
                     };
                 });
-#if DEBUG
-            IdentityModelEventSource.ShowPII = true;
-#endif
-            // services.AddResponseCaching(options =>
-            // {
-            //     options.UseCaseSensitivePaths = true;
-            //     options.MaximumBodySize = 1024;
-            // });
-
             services.AddTransient<IShopService, ShopService>();
             services.AddMemoryCache();
             services.AddSwaggerGen(c =>

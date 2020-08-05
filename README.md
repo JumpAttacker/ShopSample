@@ -26,3 +26,9 @@ line 129: interactive.public
  
 ### Shop API
  * ShopBack/src/apps/Shop/Properties/launchSettings.json
+
+--- 
+## Local run without docker-compose
+ - create postgres for api
+ 
+<code>docker run -p 54320:5432 --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres </code>
