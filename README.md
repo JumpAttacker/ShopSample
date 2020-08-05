@@ -9,9 +9,7 @@
 
  - ```git clone https://github.com/JumpAttacker/ShopSample.git```
  - ```cd shopSample```
- - ```docker-compose up --build```
- - **ctrl+c** (postgres is crashing for first run)
- - ```docker-compose up -d```
+ - ```docker-compose up --build ```
  - open in browser http://localhost:3000
 
 

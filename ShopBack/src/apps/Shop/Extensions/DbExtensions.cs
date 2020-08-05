@@ -32,6 +32,7 @@ namespace Shop.Extensions
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                throw;
             }
             finally
             {

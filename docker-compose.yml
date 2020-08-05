@@ -2,24 +2,41 @@ version: '3.4'
 
 networks:
   dockerapi-dev:
-    driver: bridge 
+    driver: bridge
 
 services:
-     
+
+#  shopservice:
+#    container_name: shopservice
+#    build: ./ShopBack/
+#    ports:
+#      - "5003:80"
+#    environment:
+#      DB_CONNECTION_STRING: "host=postgres_image;port=5432;database=blogdb;username=bloguser;password=bloguser"
+#      AUTH_Authority: "http://identity_server4/"
+#      AUTH_Audience: "api"
+#    networks:
+#      - dockerapi-dev
+#    depends_on:
+#      - "postgres_image"
+#    restart: on-failure
+
   shopservice:
-    container_name: shopservice
     build: ./ShopBack/
-    ports:
-      - "5003:80"     
+    container_name: shopservice
     environment:
       DB_CONNECTION_STRING: "host=postgres_image;port=5432;database=blogdb;username=bloguser;password=bloguser"
       AUTH_Authority: "http://identity_server4/"
       AUTH_Audience: "api"
     networks:
-      - dockerapi-dev  
+        - dockerapi-dev
     depends_on:
-      - postgres_image
-      
+        - "postgres_image"
+    restart: on-failure
+    ports:
+      - "5003:80"
+    command: sh -c 'dockerize -wait tcp://postgres_image:5432 -- dotnet Shop.dll'
+
   postgres_image:
     image: postgres:latest
     container_name: postgres_image
@@ -36,16 +53,16 @@ services:
       POSTGRES_DB: "blogdb"
     networks:
       - dockerapi-dev
-      
+
   identity_server:
     container_name: identity_server4
     build: ./IdentityServer4/
     ports:
       - 5000:80
-    restart: always      
+    restart: always
     networks:
       - dockerapi-dev
-      
+
   client:
     container_name: client
     build:
@@ -57,5 +74,6 @@ services:
       - CHOKIDAR_USEPOLLING=true
     networks:
       - dockerapi-dev
+#    command: ["./wait-for-it.sh", "db:54322", "--", "python", "app.py"]
 volumes:
   db_volume:
