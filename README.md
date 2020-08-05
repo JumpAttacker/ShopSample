@@ -3,15 +3,15 @@
 1. react app - client
 2. asp net core 3 - web api
 3. postgres db - web api db
-4. identiy server - identity server 4
+4. identity server - identity server 4
 
 ## How to run:
 
- - git clone https://github.com/JumpAttacker/ShopSample.git
- - cd shopSample
- - docker-compose up --build
- - ctrl+c (postgres is crashing for first run)
- - docker-compose up -d
+ - ```git clone https://github.com/JumpAttacker/ShopSample.git```
+ - ```cd shopSample```
+ - ```docker-compose up --build```
+ - **ctrl+c** (postgres is crashing for first run)
+ - ```docker-compose up -d```
  - open in browser http://localhost:3000
 
 
@@ -30,5 +30,5 @@ line 129: interactive.public
 --- 
 ## Local run without docker-compose
  - create postgres for api
- 
-<code>docker run -p 54320:5432 --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres </code>
+
+```docker run -p 54320:5432 --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres```
