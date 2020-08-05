@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Domain.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Shop.DTOs;
 using Shop.Services;
@@ -14,24 +11,24 @@ using Shop.Services;
 namespace Shop.Controllers
 {
     /// <summary>
-    /// Shop controller
+    ///     Shop controller
     /// </summary>
     [ApiController]
     [Authorize]
     [Route("[controller]")]
     public class ShopController : ControllerBase
     {
-        private readonly IShopService _shopService;
         private readonly ILogger<ShopController> _logger;
+        private readonly IShopService _shopService;
 
         public ShopController(ILogger<ShopController> logger, IShopService shopService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _shopService = shopService;
         }
-        
+
         /// <summary>
-        /// Получить все итемы
+        ///     Получить все итемы
         /// </summary>
         /// <returns>Возвращает все итемы</returns>
         [HttpGet]
@@ -41,11 +38,12 @@ namespace Shop.Controllers
             var data = await _shopService.GetItems();
             return Ok(data);
         }
-        
+
         [HttpGet("{Page:int}/{PerPage:int}")]
         public async Task<IActionResult> GetWithPagination([FromRoute] PaginationModel paginationSettings)
         {
-            _logger.LogDebug($"Method {nameof(GetWithPagination)} Page: {paginationSettings.Page} PageSize: {paginationSettings.PerPage}");
+            _logger.LogDebug(
+                $"Method {nameof(GetWithPagination)} Page: {paginationSettings.Page} PageSize: {paginationSettings.PerPage}");
             var data = await _shopService.GetItems(paginationSettings);
             return Ok(data);
         }

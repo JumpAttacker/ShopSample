@@ -8,7 +8,7 @@ namespace Shop.DTOs
         public string Description { get; set; }
         public int Price { get; set; }
     }
-    
+
     public class PaginationModel
     {
         /// <summary>
@@ -21,7 +21,7 @@ namespace Shop.DTOs
         /// </summary>
         public int PerPage { get; set; }
     }
-    
+
     /// <summary>
     ///     Данные со счетчиком
     /// </summary>
@@ -46,17 +46,17 @@ namespace Shop.DTOs
         public List<T> Data { get; set; }
 
         /// <summary>
-        /// Номер страницы
+        ///     Номер страницы
         /// </summary>
         public int Page { get; set; }
 
         /// <summary>
-        /// Размер страницы
+        ///     Размер страницы
         /// </summary>
         public int PageSize { get; set; }
 
         /// <summary>
-        /// Общее количество подразделений
+        ///     Общее количество подразделений
         /// </summary>
         public long Total { get; set; }
     }

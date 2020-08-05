@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,14 +10,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Persistence.Context;
 using Shop.Extensions;
 using Shop.Services;
-using System;
-using System.Reflection;
-using System.IO;
-using System.Linq;
-using Microsoft.OpenApi.Models;
 
 namespace Shop
 {
@@ -25,7 +23,8 @@ namespace Shop
         {
             services.AddDbContext<ApplicationContext>((provider, builder) =>
             {
-                var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+                var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
+                                       "Host=localhost;Port=54320;Database=shopService;Username=postgres;Password=mysecretpassword";
                 Console.WriteLine($"connection string: {connectionString}");
                 builder.UseLoggerFactory(DbExtensions.GetLoggerFactory).UseNpgsql(
                     connectionString ?? throw new KeyNotFoundException("cant find connection string"));
@@ -46,7 +45,7 @@ namespace Shop
                     options.Authority = authority;
                     options.Audience = audience;
                     options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters()
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidIssuers = new[] {"http://localhost:5000", "http://identity_server4/"}
                     };
@@ -71,7 +70,7 @@ namespace Shop
                 {
                     Version = "v1",
                     Title = "Shop Api",
-                    Description = "A simple example ASP.NET Core Web API",
+                    Description = "A simple example ASP.NET Core Web API"
                 });
 
                 // Set the comments path for the Swagger JSON and UI.
@@ -86,7 +85,7 @@ namespace Shop
                         Description = "Please enter into field the word 'Bearer' following by space and JWT",
                         Name = "Authorization", Type = SecuritySchemeType.ApiKey
                     });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
@@ -98,8 +97,7 @@ namespace Shop
                             },
                             Scheme = "oauth2",
                             Name = "Bearer",
-                            In = ParameterLocation.Header,
-
+                            In = ParameterLocation.Header
                         },
                         new List<string>()
                     }

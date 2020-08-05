@@ -7,7 +7,6 @@ import * as Yup from "yup";
 import {IItem} from "../store/Items/Slice";
 import {Button} from "react-bootstrap";
 import {useHistory} from 'react-router-dom';
-import useItems from "../Hook/useItems";
 
 export interface IValidateComponentProp {
     name: string,
@@ -68,7 +67,7 @@ const ItemEditForm: React.FC<IProps> = ({item, onUpdate, onCreate}) => {
                 }}
                 validationSchema={Yup.object().shape({
                     price: Yup.number().positive().required("Required"),
-                    name: Yup.string().required().max(20).min(2),
+                    name: Yup.string().required().max(50).min(5),
                     description: Yup.string().required().max(200)
                 })}
             >

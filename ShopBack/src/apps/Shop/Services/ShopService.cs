@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.Model;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -15,10 +14,6 @@ namespace Shop.Services
 {
     public class ShopService : IShopService
     {
-        private ApplicationContext Context { get; }
-        private ILogger<ShopService> Logger { get; }
-        private IMemoryCache MemoryCache { get; }
-
         public ShopService(ApplicationContext context, ILogger<ShopService> logger, IMemoryCache memoryCache)
         {
             Context = context;
@@ -26,15 +21,17 @@ namespace Shop.Services
             MemoryCache = memoryCache;
         }
 
+        private ApplicationContext Context { get; }
+        private ILogger<ShopService> Logger { get; }
+        private IMemoryCache MemoryCache { get; }
+
         public async Task<List<Item>> GetItems()
         {
             if (MemoryCache.TryGetValue("items", out List<Item> items)) return items;
             items = await Context.Items.OrderBy(x => x.Id).ToListAsync();
             if (items != null)
-            {
                 MemoryCache.Set("items", items,
                     new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
-            }
 
             return items;
         }
@@ -44,7 +41,7 @@ namespace Shop.Services
             var totalItems = await Context.Items.CountAsync();
             var items = await Context.Items.OrderBy(x => x.Id).Page(paginationSettings.Page, paginationSettings.PerPage)
                 .ToListAsync();
-            return new CountedData<Item>()
+            return new CountedData<Item>
             {
                 Data = items, Page = paginationSettings.Page, PageSize = paginationSettings.PerPage, Total = totalItems
             };
@@ -55,14 +52,10 @@ namespace Shop.Services
             if (MemoryCache.TryGetValue(id, out Item item)) return item;
             item = await Context.Items.FirstOrDefaultAsync(p => p.Id == id);
             if (item != null)
-            {
                 MemoryCache.Set(item.Id, item,
                     new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(5)));
-            }
             else
-            {
                 throw new KeyNotFoundException("cant find item with id: " + id);
-            }
 
             return item;
         }

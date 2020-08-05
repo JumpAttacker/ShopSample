@@ -6,7 +6,7 @@ import useItems from "../Hook/useItems";
 import LoadingAndErrorView from "../Components/LoadingAndErrorView";
 import ItemEditForm from "../Components/ItemEditForm";
 
-enum SubmitType { Update, Create};
+enum SubmitType { Update, Create}
 
 const ItemPage = () => {
     const history = useHistory();
