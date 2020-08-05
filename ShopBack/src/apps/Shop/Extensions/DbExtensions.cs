@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Domain.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -17,30 +19,31 @@ namespace Shop.Extensions
             builder.AddConsole();
         });
 
-        public static void InitializeDatabase(this IApplicationBuilder app)
+        public static async Task InitializeDatabase(this IApplicationBuilder app)
         {
-            Console.WriteLine("Start migration");
+            using var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+
             try
             {
-                using var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-                scope.ServiceProvider.GetRequiredService<ApplicationContext>().Database.Migrate();
+                Console.WriteLine("Start migration");
+                await scope.ServiceProvider.GetRequiredService<ApplicationContext>().Database.MigrateAsync();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
-
-            Console.WriteLine("End migration");
-
+            finally
+            {
+                Console.WriteLine("End migration");
+            }
 
             try
             {
-                using var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-                var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
                 var any = context.Items.Any();
                 if (!any)
                 {
-                    Console.WriteLine("start seeding");
+                    Console.WriteLine("Start seeding");
                     var data = new List<Item>();
                     for (var i = 0; i < 100; i++)
                         data.Add(new Item
@@ -49,13 +52,18 @@ namespace Shop.Extensions
                             Description = "some description for item #" + i,
                             Price = new Random(100).Next(10, 500)
                         });
-                    context.Items.AddRange(data);
-                    context.SaveChanges();
-                    Console.WriteLine("end of seed");
+                    await context.Items.AddRangeAsync(data);
+                    await context.SaveChangesAsync();
+                    Console.WriteLine("End of seed");
+                }
+                else
+                {
+                    Console.WriteLine("There are no reasons to seed in db");
                 }
             }
             catch (Exception e)
             {
+                Console.WriteLine("Error in seeding");
                 Console.WriteLine(e);
             }
         }

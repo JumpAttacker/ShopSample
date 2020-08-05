@@ -44,7 +44,7 @@ const useAuth = () => {
         await userManager.signinRedirect()
     }
     const Logout = async () => {
-        await userManager.signoutRedirect()
+        await userManager.signoutRedirect();
     }
     return {
         userManager,

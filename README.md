@@ -9,5 +9,5 @@
 
  - git clone https://github.com/JumpAttacker/ShopSample.git
  - cd shopSample
- - docker-compose build
- - docker-compose up
+ - docker-compose up --build
+ - open in browser http://localhost:3000

@@ -32,6 +32,7 @@ const ItemsPage = () => {
             try {
                 const fetchData = await GetItemsWithPagination(paginationData)
                 console.log('fetchData', fetchData)
+                dispatch(setItems(fetchData.data))
                 setPaginationData({total: fetchData.total, page: fetchData.page, pageSize: fetchData.pageSize})
             } catch (e) {
                 setError(e.message)
@@ -41,10 +42,6 @@ const ItemsPage = () => {
         }
         loadData()
     }, [paginationData.page, paginationData.pageSize])
-
-    useEffect(() => {
-
-    }, [paginationData])
 
     const editClick = (index: number | undefined = undefined) => {
         if (index !== undefined && index >= 0) {
@@ -83,7 +80,7 @@ const ItemsPage = () => {
             <div className={styles.myFlex}>
                 <Paginator
                     disabled={loading}
-                    pages={paginationData.total}
+                    pages={Math.trunc((paginationData.total - 1) / (paginationData.pageSize)) + 1}
                     active={paginationData.page}
                     onChange={(page: number) => handlePageSelected(page)}/>
                 <Pagination className='ml-2'>
