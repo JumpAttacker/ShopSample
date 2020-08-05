@@ -1,5 +1,5 @@
-﻿using IdentityServer4.Services;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using IdentityServer4.Services;
 
 namespace IdentityServer4Demo
 {

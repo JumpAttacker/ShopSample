@@ -4,7 +4,7 @@
 
 using IdentityServer4.Models;
 
-namespace IdentityServerHost.Quickstart.UI
+namespace IdentityServer4Demo.Quickstart.Home
 {
     public class ErrorViewModel
     {
@@ -14,7 +14,7 @@ namespace IdentityServerHost.Quickstart.UI
 
         public ErrorViewModel(string error)
         {
-            Error = new ErrorMessage { Error = error };
+            Error = new ErrorMessage {Error = error};
         }
 
         public ErrorMessage Error { get; set; }

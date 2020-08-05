@@ -1,7 +1,7 @@
-﻿using IdentityServer4;
+﻿using System.Linq;
+using IdentityServer4;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace IdentityServer4Demo.Api
 {
@@ -11,7 +11,7 @@ namespace IdentityServer4Demo.Api
     {
         public IActionResult Get()
         {
-            var claims = User.Claims.Select(c => new { c.Type, c.Value });
+            var claims = User.Claims.Select(c => new {c.Type, c.Value});
             return new JsonResult(claims);
         }
     }

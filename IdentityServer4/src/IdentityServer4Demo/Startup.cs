@@ -1,44 +1,42 @@
-﻿using IdentityServer4;
-using IdentityServer4.Services;
+﻿using IdentityServer4.Services;
 using IdentityServer4.Validation;
-using IdentityServerHost.Quickstart.UI;
+using IdentityServer4Demo.Quickstart;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 namespace IdentityServer4Demo
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        public IConfiguration Configuration { get; }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            
+
             // cookie policy to deal with temporary browser incompatibilities
             services.AddSameSiteCookiePolicy();
 
             services.AddIdentityServer(options =>
-            {
-                options.Events.RaiseErrorEvents = true;
-                options.Events.RaiseFailureEvents = true;
-                options.Events.RaiseInformationEvents = true;
-                options.Events.RaiseSuccessEvents = true;
-            })
+                {
+                    options.Events.RaiseErrorEvents = true;
+                    options.Events.RaiseFailureEvents = true;
+                    options.Events.RaiseInformationEvents = true;
+                    options.Events.RaiseSuccessEvents = true;
+                })
                 .AddInMemoryApiScopes(Config.GetApiScopes())
                 .AddInMemoryApiResources(Config.GetApis())
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryClients(Config.GetClients())
                 .AddTestUsers(TestUsers.Users)
-                .AddDeveloperSigningCredential(persistKey: false);
+                .AddDeveloperSigningCredential(false);
 
             services.AddAuthentication()
                 // .AddGoogle("Google", options =>
@@ -70,10 +68,7 @@ namespace IdentityServer4Demo
                 //         RoleClaimType = "role"
                 //     };
                 // })
-                .AddLocalApi(options =>
-                {
-                    options.ExpectedScope = "api";
-                });
+                .AddLocalApi(options => { options.ExpectedScope = "api"; });
 
             // preserve OIDC state in cache (solves problems with AAD and URL lenghts)
             services.AddOidcStateDataFormatterCache("aad");
@@ -81,10 +76,7 @@ namespace IdentityServer4Demo
             // add CORS policy for non-IdentityServer endpoints
             services.AddCors(options =>
             {
-                options.AddPolicy("api", policy =>
-                {
-                    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-                });
+                options.AddPolicy("api", policy => { policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod(); });
             });
 
             // demo versions (never use in production)
@@ -106,10 +98,7 @@ namespace IdentityServer4Demo
             app.UseIdentityServer();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapDefaultControllerRoute();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
         }
     }
 }

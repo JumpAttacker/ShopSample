@@ -27,8 +27,7 @@ namespace Shop
                                        "Host=localhost;Port=54320;Database=shopService;Username=postgres;Password=mysecretpassword";
                 Console.WriteLine($"connection string: {connectionString}");
                 builder.UseLoggerFactory(DbExtensions.GetLoggerFactory).UseNpgsql(
-                    connectionString ?? throw new KeyNotFoundException("cant find connection string"));
-                // "Host=localhost;Port=54320;Database=shopService;Username=postgres;Password=mysecretpassword");
+                    connectionString);
             });
             services.AddControllers();
 
