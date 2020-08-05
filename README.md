@@ -7,7 +7,7 @@
 
 ## How to run
 
- - Git clone https://github.com/JumpAttacker/ShopSample.git
- - cd shopSabple
+ - git clone https://github.com/JumpAttacker/ShopSample.git
+ - cd shopSample
  - docker-compose build
  - docker-compose up
